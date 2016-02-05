@@ -1,6 +1,6 @@
 /*
  *  Catch v1.3.3
- *  Generated: 2016-02-05 11:27:58.349452
+ *  Generated: 2016-02-05 12:00:58.656799
  *  ----------------------------------------------------------
  *  This file has been merged from multiple headers. Please don't edit it directly
  *  Copyright (c) 2012 Two Blue Cubes Ltd. All rights reserved.
@@ -10029,15 +10029,17 @@ namespace Catch {
 // Standard C/C++ main entry point
 int main (int argc, char * argv[]) {
 #ifdef CATCH_MPI_ENABLED
-  int i;
-  MPI_Initialized(&i);
-  if(!i) MPI_Init(NULL,NULL);
-    int my_rank = -1;
-    MPI_Comm_rank(MPI_COMM_WORLD,&my_rank);
-    printf("Catch running in parallel (Rank %i)\n",my_rank);
+  //int i;
+  //MPI_Initialized(&i);
+  MPI_Init(NULL,NULL);
+  //if(!i) MPI_Init(NULL,NULL);
+  int my_rank;
+  MPI_Comm_rank(MPI_COMM_WORLD,&my_rank);
+  printf("Catch running in parallel (Rank %i)\n",my_rank);
   auto test_results = Catch::Session().run( argc, argv );
-  MPI_Finalized(&i);
-  if(!i) MPI_Finalize();
+  //MPI_Finalized(&i);
+  //if(!i) MPI_Finalize();
+  MPI_Finalize();
   return test_results;
 #else
     return Catch::Session().run( argc, argv );
