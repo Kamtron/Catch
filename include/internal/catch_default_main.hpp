@@ -10,9 +10,26 @@
 
 #ifndef __OBJC__
 
+#ifdef CATCH_MPI_ENABLED
+#include <mpi.h>
+#endif
+
 // Standard C/C++ main entry point
 int main (int argc, char * argv[]) {
+#ifdef CATCH_MPI_ENABLED
+  int i;
+  MPI_Initialized(&i);
+  if(!i) MPI_Init(NULL,NULL);
+    int my_rank = -1;
+    MPI_Comm_rank(MPI_COMM_WORLD,&my_rank);
+    printf("Catch running in parallel (Rank %i)\n",my_rank);
+  auto test_results = Catch::Session().run( argc, argv );
+  MPI_Finalized(&i);
+  if(!i) MPI_Finalize();
+  return test_results;
+#else
     return Catch::Session().run( argc, argv );
+#endif
 }
 
 #else // __OBJC__
